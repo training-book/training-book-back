@@ -1,42 +1,25 @@
 name: Initialize Database
 
-on:
+on: 
   workflow_dispatch:
-  push:
-    branches:
-      - master  
 
 jobs:
   setup-db:
     runs-on: ubuntu-latest
-    services:
-      mysql:
-        image: mysql:8.0.30
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-        ports:
-          - 3307:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h localhost -u root --password=${{ secrets.MYSQL_ROOT_PASSWORD }} --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install MySQL client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mysql-client
+      - name: Setup MySQL client
+        run: sudo apt-get install mysql-client
 
       - name: Download and execute DB structure script
         run: |
-          curl -H "Authorization: token ${{ secrets.GIST_ACCESS_TOKEN }}" -L "https://gist.github.com/Lhourquin/845bddd99f0fa1f9f3e1b2befb901427" -o structure.sql
-          mysql -h 127.0.0.1 -u root --password=${{ secrets.MYSQL_ROOT_PASSWORD }} < structure.sql
+          curl -H "Authorization: token ${{ secrets.GIST_ACCESS_TOKEN }}" -L "https://gist.github.com/Lhourquin/845bddd99f0fa1f9f3e1b2befb901427/raw" -o init-db.sql
+          mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }} < init-db.sql
 
       - name: Download and execute DB data script
         run: |
-          curl -H "Authorization: token ${{ secrets.GIST_ACCESS_TOKEN }}" -L "https://gist.github.com/Lhourquin/4599f7f0067f41bc9e9a277e2f44967b" -o data.sql
-          mysql -h 127.0.0.1 -u root --password=${{ secrets.MYSQL_ROOT_PASSWORD }} < data.sql
+          curl -H "Authorization: token ${{ secrets.GIST_ACCESS_TOKEN }}" -L "https://gist.github.com/Lhourquin/4599f7f0067f41bc9e9a277e2f44967b/raw" -o tb-data.sql
+          mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }} < tb-data.sql
