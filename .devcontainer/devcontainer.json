@@ -1,0 +1,12 @@
+{
+    "name": "Training-book back end",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "server",
+    "workspaceFolder": "/app",
+    "shutdownAction": "stopCompose",
+    "extensions": ["dbaeumer.vscode-eslint"],
+    "settings": { 
+      "terminal.integrated.shell.linux": "/bin/bash"
+    }
+  }
+  
