@@ -13,6 +13,18 @@ class UserController {
             res.status(500).send({ error: error.message });
         }
     }
+
+    static async authenticate(req, res){
+        const userData = req.body;
+        try{
+            const token = await userService.login(userData);
+            if(token){
+                res.json({token});
+            }
+        } catch (error){
+            res.status(500).json({error : error.message});
+        }
+    }
 }
 
 module.exports = UserController;

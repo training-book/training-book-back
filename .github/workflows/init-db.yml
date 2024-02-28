@@ -1,25 +1,26 @@
-name: Initialize Database
+  name: Initialize Database
 
-on: 
-  workflow_dispatch:
+  on: 
+    workflow_dispatch:
 
-jobs:
-  setup-db:
-    runs-on: ubuntu-latest
+  jobs:
+    setup-db:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
 
-      - name: Setup MySQL client
-        run: sudo apt-get install mysql-client
+        - name: Setup MySQL client
+          run: sudo apt-get install mysql-client 
 
-      - name: Download and execute DB structure script
-        run: |
-          curl -H "Authorization: token ${{ secrets.GIST_ACCESS_TOKEN }}" -L "https://gist.github.com/Lhourquin/845bddd99f0fa1f9f3e1b2befb901427/raw" -o init-db.sql
-          mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }} < init-db.sql
+        - name: Download and execute DB structure script
+          run: |
+          
+            curl -H "Authorization: token ${{ secrets.GIST_ACCESS_TOKEN }}" -L "https://gist.github.com/Lhourquin/845bddd99f0fa1f9f3e1b2befb901427/raw" -o init-db.sql
+            mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }} < init-db.sql
 
-      - name: Download and execute DB data script
-        run: |
-          curl -H "Authorization: token ${{ secrets.GIST_ACCESS_TOKEN }}" -L "https://gist.github.com/Lhourquin/4599f7f0067f41bc9e9a277e2f44967b/raw" -o tb-data.sql
-          mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }} < tb-data.sql
+        - name: Download and execute DB data script
+          run: |
+            curl -H "Authorization: token ${{ secrets.GIST_ACCESS_TOKEN }}" -L "https://gist.github.com/Lhourquin/4599f7f0067f41bc9e9a277e2f44967b/raw" -o tb-data.sql
+            mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} --password=${{ secrets.DB_PASSWORD }} ${{ secrets.DB_NAME }} < tb-data.sql
