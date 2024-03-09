@@ -3,10 +3,12 @@
     "dockerComposeFile": "../docker-compose.yml",
     "service": "server",
     "workspaceFolder": "/app",
+    // "forwardPorts":[3000, 9229],
     "shutdownAction": "stopCompose",
     "extensions": ["dbaeumer.vscode-eslint"],
     "settings": { 
       "terminal.integrated.shell.linux": "/bin/bash"
-    }
+    },
+    "remoteUser":"node"
   }
   
