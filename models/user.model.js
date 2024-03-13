@@ -39,11 +39,16 @@ User.init({
     lastName: {
         type: DataTypes.CHAR(45),
         allowNull: false
+    },
+    isVerified : {
+        type : DataTypes.TINYINT,
+    },
+    confirmationToken : {
+        type: DataTypes.CHAR()
     }
 }, {
     sequelize,
     modelName: 'users',
-    timestamps: false
 });
 
 module.exports = User;
