@@ -28,7 +28,7 @@ User.init({
         type: DataTypes.CHAR(1),
         allowNull: false
     },
-    pwd: {
+    password: {
         type: DataTypes.CHAR(45),
         allowNull: false
     },

@@ -20,7 +20,7 @@ class UserService {
             throw new Error('Ce pseudo est déjà utilisé !');
         } else {
 
-            const hashedPassword = await bcrypt.hash(userData.pwd, 10);
+            const hashedPassword = await bcrypt.hash(userData.password, 10);
 
             const newUser = await userModel.create({
                 ...userData,
@@ -55,7 +55,7 @@ class UserService {
 
         if (userResponse) {
             if (userResponse.isVerified) {
-                const isPasswordValid = await bcrypt.compare(userData.pwd, userResponse.pwd);
+                const isPasswordValid = await bcrypt.compare(userData.password, userResponse.password);
 
                 if (isPasswordValid) {
                     console.log(userResponse.dataValues)
