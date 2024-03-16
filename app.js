@@ -1,9 +1,11 @@
 const express = require('express');
 const sequelize = require('./loaders/db');
+const authRouter = require('./routes/auth.route');
 const userRouter = require('./routes/user.route');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const verifyToken = require('./middelware/verifyToken');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -12,7 +14,9 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-app.use('/api/users', userRouter)
+app.use('/auth', authRouter);
+app.use('/api', verifyToken);
+app.use('/api/user/', userRouter);
 
 app.use((req, res, next) => {
   // Ajoute l'heure du serveur à l'en-tête de la réponse
