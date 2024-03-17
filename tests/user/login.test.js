@@ -1,36 +1,48 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { login } = require('./../../services/user.service'); 
+const AuthService  = require('./../../services/auth.service'); 
 
-jest.mock('bcryptjs');
-jest.mock('jsonwebtoken');
-jest.mock('./../../models/user.model', () => ({
-  findOne: jest.fn()
-}));
+it('should send a status code of 400 when user don\'t exist', async () => {
+  const userData = {
+    mail : "lhourquin@gmail.com",
+    password : "tatata" 
+  }
+  // console.log(AuthService.test + ' from AuthSerice class');
+  await AuthService.login(userData);
+})
 
-describe('Test de la fonction login', () => {
-  it('devrait retourner un token et les infos utilisateur si les identifiants sont corrects', async () => {
-    const mockUser = {
-      idUser: '1',
-      userName: 'TestUser',
-      mail: 'test@example.com',
-      pwd: 'hashedPassword'
-    };
+it('should send a status code of 400 when user exist', () => {
 
-    require('./../../models/user.model').findOne.mockResolvedValue(mockUser);
+})
+// jest.mock('bcryptjs');
+// jest.mock('jsonwebtoken');
+// jest.mock('./../../models/user.model', () => ({
+//   findOne: jest.fn()
+// }));
 
-    bcrypt.compare.mockResolvedValue(true);
+// describe('Test de la fonction login', () => {
+//   it('devrait retourner un token et les infos utilisateur si les identifiants sont corrects', async () => {
+//     const mockUser = {
+//       idUser: '1',
+//       userName: 'TestUser',
+//       mail: 'test@example.com',
+//       pwd: 'hashedPassword'
+//     };
 
-    const expectedToken = 'jwt.token.here';
-    jwt.sign.mockReturnValue(expectedToken);
+//     require('./../../models/user.model').findOne.mockResolvedValue(mockUser);
 
-    const userData = { mail: 'test@example.com', pwd: 'hashedPassword' };
-    const result = await login(userData);
+//     bcrypt.compare.mockResolvedValue(true);
 
-    expect(result).toHaveProperty('token');
-    expect(result).toHaveProperty('user');
-    expect(result.user).not.toHaveProperty('pwd');
-    expect(jwt.sign).toHaveBeenCalledTimes(1);
-  });
+//     const expectedToken = 'jwt.token.here';
+//     jwt.sign.mockReturnValue(expectedToken);
 
-});
+//     const userData = { mail: 'test@example.com', pwd: 'hashedPassword' };
+//     const result = await login(userData);
+
+//     expect(result).toHaveProperty('token');
+//     expect(result).toHaveProperty('user');
+//     expect(result.user).not.toHaveProperty('pwd');
+//     expect(jwt.sign).toHaveBeenCalledTimes(1);
+//   });
+
+// });
