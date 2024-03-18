@@ -42,7 +42,7 @@ class AuthService {
 
                 await userModel.update({ confirmationToken: token }, { where: { idUser: newUser.idUser } });
                 console.log("32 : ", newUser)
-                const confirmationUrl = `http://localhost:3000/api/users/confirm/${token}`;
+                const confirmationUrl = `http://localhost:3000/auth/confirm/${token}`;
 
                 this.sendMail(newUser, confirmationUrl);
                 return newUser;
