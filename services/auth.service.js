@@ -73,6 +73,7 @@ class AuthService {
                         });
 
                     return {
+                        userResponse,
                         user,
                         token
                     };

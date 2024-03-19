@@ -10,15 +10,19 @@ class AuthController {
             try {
                 const newUserResponse = await AuthService.createUser(req.body);
                 if (!newUserResponse.error) {
-                    res.status(201).send({ message: "Merci " + newUserResponse.userName + " ! Consulte ta boite mail pour finaliser ton inscription." });
+                    res.status(201);
+                    res.send({ message: "Merci " + newUserResponse.userName + " ! Consulte ta boite mail pour finaliser ton inscription." });
                 }else {
-                    res.status(400).send({error : newUserResponse.error})
+                    res.status(500);
+                    res.send({error : newUserResponse.error + "!msdfk"});
                 }
             } catch (error) {
-                res.status(500).send({ error: error.message });
+                res.status(409);
+                res.send({ error});
             }
         } else {
-            res.status(400).send({ error: "Une erreur s'est produite." });
+            res.status(400);
+            res.send({ error: "Une erreur s'est produite." });
         }
     }
 
@@ -40,10 +44,12 @@ class AuthController {
                 //     // )
                 // }
             } catch (error) {
-                res.status(500).json({ error: error.message });
+                res.status(500);
+                res.json({ error: error.message });
             }
         } else {
-            res.status(400).send({error : "Vous avez fait une erreur dans votre adresse e-mail ou votre mot de passe."})
+            res.status(400);
+            res.send({error : "Vous avez fait une erreur dans votre adresse e-mail ou votre mot de passe."})
         }
     }
 
@@ -53,7 +59,8 @@ class AuthController {
             const validateMailResponse = await AuthService.validateMail(token);
             if (validateMailResponse) {
                 console.log(validateMailResponse)
-                res.status(200).send(`
+                res.status(200);
+                res.send(`
                 <!DOCTYPE html>
                 <html lang="fr">
                 <head>
@@ -93,7 +100,8 @@ class AuthController {
             }
         } catch (error) {
             console.log('error validate : ', error)
-            res.status(500).send(
+            res.status(500);
+            res.send(
                 `
                 <!DOCTYPE html>
                 <html>

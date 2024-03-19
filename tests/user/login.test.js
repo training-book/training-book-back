@@ -1,19 +1,58 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const AuthService  = require('./../../services/auth.service'); 
+const AuthController = require('./../../controllers/auth.controller');
+const User = require('../../models/user.model')
 
-it('should send a status code of 400 when user don\'t exist', async () => {
-  const userData = {
-    mail : "lhourquin@gmail.com",
-    password : "tatata" 
+jest.mock('../../models/user.model');
+
+const reqLogin = {
+  body: {
+    mail: "lhourquin@gmail.com",
+    password: "Kramberry62800!"
   }
-  // console.log(AuthService.test + ' from AuthSerice class');
-  await AuthService.login(userData);
+}
+
+const reqSignup = {
+  body: {
+    userName: "LeKalu592",
+    birthday: "10-09-1998",
+    mail: "lhourquinpropp@gmail.com",
+    sex: "H",
+    firstName: "Lucas",
+    lastName: "Hourquin",
+    password: "Kramberry62800!"
+
+  }
+}
+const res = {
+  status: jest.fn((x) => x),
+  send: jest.fn((x) => x)
+}
+
+
+it('should send a status code of 409 when mail or username is already taken', async () => {
+
+  // User.findOne.mockImplementationOnce(() => ({
+    // "idUser": 51,
+    // "userName": "LeKalu59",
+    // "birthday": "1998-10-09",
+    // "mail": "lhourquinpro@gmail.com",
+    // "sex": "H",
+    // "password": "$2a$10$kIbrqcVVXHaSi4CHHSOCfuqw6IqQ1.Yp1RwG5tWs1HhJHCapqVwuy",
+    // "firstName": "Lucas",
+    // "lastName": "Hourquin",
+    // "isVerified": 1,
+    // "confirmationToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsInVzZXJuYW1lIjoiTGVLYWx1NTkiLCJ4c3JmVG9rZW4iOiJjNjM2NDFiNDljM2VkYjliOGQyMGZjZGY0MzI1Y2M2Y2Q3YzMxODkzMjM0OTYxMWEyNDJhMmU5MWE4ZDAwZmFhMTA0ZmYxYjA0MDdhYmVlYTYwZWFhNjZlOGI4ZjlmZGQ1MzJlYzM2YmZhNmJhZjU3YTBiM2QyY2ExZTFjYThkNiIsImlhdCI6MTcxMDMwNTY4NSwiZXhwIjoxNzEwMzA5Mjg1fQ.01XSwt9JT4Orbo_25i8laQJISZLTGZKfd26Lr_dcmlU",
+    // "createdAt": "2024-03-13",
+    // "updatedAt": "2024-03-16"
+  // }));
+
+  await AuthController.signup(reqSignup, res);
+
+  expect(res.status).toHaveBeenCalledWith(409);
+  expect(res.send).toHaveBeenCalledTimes(1);
 })
 
-it('should send a status code of 400 when user exist', () => {
-
-})
 // jest.mock('bcryptjs');
 // jest.mock('jsonwebtoken');
 // jest.mock('./../../models/user.model', () => ({
