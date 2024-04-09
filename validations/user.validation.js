@@ -1,5 +1,4 @@
 const Joi = require('joi');
-
 const pwdRegex = new RegExp('^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{8,30}$');
 
 
@@ -17,13 +16,12 @@ const signupSchema = Joi.object({
     password :Joi.string().pattern(pwdRegex).required(), 
     sex :  Joi.string().max(1).trim().required(),
     birthday : Joi.date().required()
-
-})
+});
 
 const changePasswordSchema = Joi.object({
     lastPassword : Joi.string().pattern(pwdRegex).required(),
     newPassword : Joi.string().pattern(pwdRegex).required()
-})
+});
 
 module.exports = { 
     loginSchema, 

@@ -13,8 +13,7 @@ class userController {
                 const newPassword = req.body.newPassword;
                 const responseChangepassword = await UserService.changePassword(idUser, lastPassword, newPassword);
                 if (!responseChangepassword.error) {
-                    // console.log(responseChangepassword)
-                    res.status(201).json({ message: "Mot de passe modifier avec succées !" });
+                    res.status(200).json({ message: "Mot de passe modifier avec succées !" });
                 } else {
                     res.status(400).json({ message: responseChangepassword.error });
                 }

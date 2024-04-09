@@ -1,38 +1,42 @@
+const AppError = require('../AppError');
 const AuthService = require('../services/auth.service');
 const userSchema = require('../validations/user.validation');
-
+const errorCodes = require('./../constants/errorCodes');
+const AppSuccess = require('./../AppSuccess');
+const sendSuccessResponse = require('./../utils/sendSuccessResponse')
 class AuthController {
 
-    static async signup(req, res) {
-        const { error } = userSchema.signupSchema.validate(req.body);
-
-        if (!error) {
-            try {
-                const newUserResponse = await AuthService.createUser(req.body);
-                if (!newUserResponse.error) {
-                    res.status(201);
-                    res.send({ message: "Merci " + newUserResponse.userName + " ! Consulte ta boite mail pour finaliser ton inscription." });
-                }else {
-                    res.status(500);
-                    res.send({error : newUserResponse.error + "!msdfk"});
-                }
-            } catch (error) {
-                res.status(409);
-                res.send({ error});
+    static async signup(req, res, next) { 
+        try {
+            const { error } = userSchema.signupSchema.validate(req.body);
+            if(!error){
+                const newUserResponse = await AuthService.signup(req.body);
+                const successReponse = new AppSuccess(602, 201, 'Creation of new user succesfull.',{
+                    newUser : { 
+                        userName : newUserResponse.userName
+                    }
+                });
+                sendSuccessResponse(res, successReponse);
+                // res.status(201);
+                // res.send({ message: "Merci " + newUserResponse.userName + " ! Consulte ta boite mail pour finaliser ton inscription." });
+            }else{
+                throw new AppError(errorCodes.USER_INVALID_FORM, 'Validation error.', 400);
             }
-        } else {
-            res.status(400);
-            res.send({ error: "Une erreur s'est produite." });
+        } catch (error) {
+            next(error)
         }
     }
 
-    static async authenticate(req, res) {
+    static async authenticate(req, res, next) {
         const { error } = userSchema.loginSchema.validate(req.body);
         if (!error) {
             try {
                 const userData = req.body;
                 const authenticateResponse = await AuthService.login(userData);
-                res.json(authenticateResponse);
+                const successResponse = new AppSuccess(600,200,'Authentication succesfull.', authenticateResponse);
+                
+                sendSuccessResponse(res, successResponse);
+                // res.json(successReponse);
 
                 // if (authenticateResponse) {
                 //     // res.cookie("access_token", authenticateResponse.token, 
@@ -57,8 +61,9 @@ class AuthController {
         const { token } = req.params;
         try {
             const validateMailResponse = await AuthService.validateMail(token);
+            console.log('ligne : ',60, ' ', validateMailResponse)
             if (validateMailResponse) {
-                console.log(validateMailResponse)
+                console.log('62 : ', validateMailResponse)
                 res.status(200);
                 res.send(`
                 <!DOCTYPE html>
