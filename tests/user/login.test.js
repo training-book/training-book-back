@@ -7,7 +7,7 @@ jest.mock('../../models/user.model');
 
 const reqLogin = {
   body: {
-    mail: "lhourquin@gmail.com",
+    email: "lhourquin@gmail.com",
     password: "Kramberry62800!"
   }
 }
@@ -16,7 +16,7 @@ const reqSignup = {
   body: {
     userName: "LeKalu592",
     birthday: "10-09-1998",
-    mail: "lhourquinpropp@gmail.com",
+    email: "lhourquinpropp@gmail.com",
     sex: "H",
     firstName: "Lucas",
     lastName: "Hourquin",
