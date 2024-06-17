@@ -36,20 +36,21 @@ class AuthController {
                 const successResponse = new AppSuccess(600,200,'Authentication succesfull.', authenticateResponse);
                 
                 sendSuccessResponse(res, successResponse);
-                // res.json(successReponse);
-
+                // res.json(successResponse);
+                
                 // if (authenticateResponse) {
-                //     // res.cookie("access_token", authenticateResponse.token, 
-                //     // {
-                //     //     httpOnly : false,
-                //     //     maxAge : new Date(Date.now() + 3600000),
-                //     //     sameSite: "Lax"
-                //     // }
-                //     // )
-                // }
+                    //     // res.cookie("access_token", authenticateResponse.token, 
+                    //     // {
+                        //     //     httpOnly : false,
+                        //     //     maxAge : new Date(Date.now() + 3600000),
+                        //     //     sameSite: "Lax"
+                        //     // }
+                        //     // )
+                        // }
             } catch (error) {
-                res.status(500);
-                res.json({ error: error.message });
+                console.log({error})
+
+                next(error);
             }
         } else {
             res.status(400);
@@ -68,17 +69,7 @@ class AuthController {
                 res.send(`
                 <!DOCTYPE html>
                 <html lang="fr">
-                <head>
                 <meta charset="UTF-8">
-                <title>Confirmation</title>
-                <link rel="stylesheet" href="style.css">
-                </head>
-                <body>
-                <div class="error-message">
-             
-        
-                <!DOCTYPE html>
-                <html>
                 <head>
                     <style>
                         .success-message {
@@ -91,11 +82,17 @@ class AuthController {
                         }
                     </style>
                 </head>
+                <title>Confirmation</title>
+                </head>
                 <body>
-                    <div class="success-message">
-                    <h2> Adresse mail confirmer !</h2>
-                    <p>Merci de vous être inscrit. Vous pouvez maintenant vous connecter.</p>
-                    </div>
+                <!DOCTYPE html>
+                <html>
+                <body>
+                <div class="success-message">
+                <h2> Adresse mail confirmer !</h2>
+                <p>Merci de vous être inscrit. Vous pouvez maintenant vous connecter.</p>
+                </div>
+                <div class="error-message">
                 </body>
                 </html>
 
