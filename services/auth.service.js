@@ -9,11 +9,11 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const AppError = require('../AppError');
 const errorCode = require('./../constants/errorCodes');
+
 class AuthService {
 
     static async signup(userData) {
-
-        const existingUserByMail = await userModel.findOne({ where: { mail: userData.mail } });
+        const existingUserByMail = await userModel.findOne({ where: { email: userData.email } });
         const existingUserByUserName = await userModel.findOne({ where: { userName: userData.userName } });
         if (existingUserByMail) {
             // throw new AppError(errorCode.CONFLICT_EXISTING_MAIL,'Cette adresse mail est déjà utilisé !', 409);
@@ -22,11 +22,10 @@ class AuthService {
             throw new AppError(errorCode.CONFLICT_EXISTING_USERNAME,'UserName are already used.',409);
             // throw new AppError(errorCode.CONFLICT_EXISTING_USERNAME,'Ce pseudo est déjà utilisé !',409);
         } else {
-
             const hashedPassword = await bcrypt.hash(userData.password, 10);
-
             const newUser = await userModel.create({
                 ...userData,
+                role: 'user',
                 password: hashedPassword
             });
 
@@ -43,10 +42,7 @@ class AuthService {
                         expiresIn: '1h',
                     });
 
-                await userModel.update({ confirmationToken: token }, { where: { idUser: newUser.idUser } });
-                console.log("32 : ", newUser)
                 const confirmationUrl = `http://localhost:3000/auth/confirm/${token}`;
-
                 this.sendMail(newUser, confirmationUrl);
                 return newUser;
             }
@@ -54,12 +50,10 @@ class AuthService {
     }
 
     static async login(userData) {
-        const userResponse = await userModel.findOne({ where: { mail: userData.mail } });
-
+        const userResponse = await userModel.findOne({ where: { email: userData.email } });
         if (userResponse) {
             if (userResponse.isVerified) {
                 const isPasswordValid = await bcrypt.compare(userData.password, userResponse.password);
-
                 if (isPasswordValid) {
                     console.log(userResponse.dataValues)
                     const { password, confirmationToken, isVerified, ...user } = userResponse.dataValues;
@@ -80,7 +74,7 @@ class AuthService {
                         token
                     };
                 } else {
-                    throw new Error('Mauvais mot de passe !');
+                    throw new AppError(errorCode.USER_INVALID_PASSWORD,'Mauvais mot de passe !', 401);
                 }
             } else {
                 throw new Error('Vous n\'avez pas valider votre adresse mail !')
@@ -147,7 +141,7 @@ class AuthService {
                 // from: GMAIL_USER,
                 from : 'Sender Name <sender@example.com>',
                 // to: 'Recipient <recipent@example.com>',
-                to: newUser.mail,
+                to: newUser.email,
                 subject: "Création de compte",
                 html: mailHTML
             }
@@ -157,9 +151,9 @@ class AuthService {
                     console.log("error nodemailer : ", error);
                     return process.exit(1);
                 } else {
+                    //TO DO : log file
                     console.log('succes nodemailer : e-mail envoyer', info.response);
                     console.log('Message sent: %s', info.messageId);
-
                     console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
                 }
             })
@@ -168,17 +162,12 @@ class AuthService {
     }
 
     static async validateMail(token) {
-        console.log('169, token : ',token)
-        const decoded = await jwt.verify(token, SECRET_KEY);
-        console.log('decoded : ',decoded)
+        const decoded = jwt.verify(token, SECRET_KEY);
         if(decoded){
-            
             const userUpdated = await userModel.update({ isVerified: 1 }, { where: { idUser: decoded.id } });
             return userUpdated[0];
         }
-
     }
-
 }
 
 module.exports = AuthService;

@@ -19,7 +19,7 @@ User.init({
         type: DataTypes.DATE,
         allowNull: false
     },
-    mail: {
+    email: {
         type: DataTypes.CHAR(50),
         allowNull: false,
         unique: true
@@ -43,8 +43,8 @@ User.init({
     isVerified : {
         type : DataTypes.TINYINT,
     },
-    confirmationToken : {
-        type: DataTypes.CHAR()
+    role: {
+        type: DataTypes.CHAR(20),
     }
 }, {
     sequelize,
