@@ -1,5 +1,5 @@
 const { ConnectionError, ConnectionRefusedError } = require("sequelize");
-const AppError = require("../AppError");
+const AppError = require("./../utils/AppError");
 
 function errorHandler(err,req,res, next) {
     if(err instanceof ConnectionError || err instanceof ConnectionRefusedError ){

@@ -1,9 +1,9 @@
-const AppError = require('../AppError');
-const AuthService = require('../services/auth.service');
-const userSchema = require('../validations/user.validation');
-const errorCodes = require('./../constants/errorCodes');
-const AppSuccess = require('./../AppSuccess');
-const sendSuccessResponse = require('./../utils/sendSuccessResponse')
+const AppError = require('../../utils/AppError');
+const AuthService = require('./../services/auth.service');
+const userSchema = require('./../../user/validations/user.validation');
+const errorCodes = require('../../constants/errorCodes');
+const AppSuccess = require('../../utils/AppSuccess');
+const sendSuccessResponse = require('../../utils/sendSuccessResponse')
 class AuthController {
 
     static async signup(req, res, next) { 
